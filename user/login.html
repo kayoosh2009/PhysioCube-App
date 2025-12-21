@@ -5,14 +5,14 @@
     <title>Physio Cube – Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- ===============  Общий стиль (те же цвета, что и на главной странице)  =============== -->
+    <!-- ====================  Общий стиль (те же цвета, что и на главной странице)  ==================== -->
     <style>
         :root{
             --accent:#0794ae;   /* фирменный синий */
             --white:#ffffff;   /* фон */
         }
 
-        /* Минимальный reset */
+        /* Basic reset */
         *{
             margin:0;
             padding:0;
@@ -96,7 +96,7 @@
         }
 
         .btn:hover{
-            background:#056e93;   /* темнее при наведении */
+            background:#056e93;
         }
 
         .divider{
@@ -115,7 +115,7 @@
             margin:0 0.5rem;
         }
 
-        /* --------------------  Social buttons  -------------------- */
+        /* --- Social buttons (Google, Apple) --- */
         .social-btn{
             background:var(--white);
             color:var(--accent);
@@ -135,11 +135,23 @@
             flex-shrink:0;
         }
 
-        .social-btn img.social-icon{
-            /* keep vertical alignment */
+        /* --- Secondary button style (Back / Register links) --- */
+        .btn-secondary{
+            background:var(--white);
+            color:var(--accent);
+            border:1px solid var(--accent);
+        }
+        .btn-secondary:hover{
+            background:#f0f8fb;
         }
 
-        /* --------------------  Адаптивность  -------------------- */
+        .extra-links{
+            margin-top:1rem;
+            display:flex;
+            flex-direction:column;
+            gap:0.5rem;
+        }
+
         @media (max-width:480px){
             .card{
                 margin:0 1rem;
@@ -151,12 +163,12 @@
 
 <body>
     <section class="card">
-        <!-- Логотип проекта -->
+        <!-- Project logo -->
         <img src="../img/icon.png" alt="Physio Cube logo" class="project-logo">
 
         <h2>Login</h2>
 
-        <!-- ---------- Форма email / password ---------- -->
+        <!-- ---------- Email / Password form ---------- -->
         <form id="loginForm">
             <div class="input-group">
                 <label for="email">Email address</label>
@@ -172,46 +184,51 @@
             <button type="submit" class="btn">Sign In</button>
         </form>
 
-        <!-- ---------- Разделитель ---------- -->
+        <!-- ---------- Divider ---------- -->
         <div class="divider">or</div>
 
-        <!-- ---------- Кнопки входа через Google и Apple ---------- -->
-        <button class="btn social-btn" id="googleBtn">
+        <!-- ---------- Social login buttons ---------- -->
+        <button type="button" class="btn social-btn" id="googleBtn">
             <img src="../img/google.png" alt="Google" class="social-icon">
             Sign in with Google
         </button>
 
-        <button class="btn social-btn" id="appleBtn" style="margin-top:0.5rem;">
+        <button type="button" class="btn social-btn" id="appleBtn" style="margin-top:0.5rem;">
             <img src="../img/apple.png" alt="Apple" class="social-icon">
             Sign in with Apple
         </button>
+
+        <!-- ---------- Extra navigation links ---------- -->
+        <div class="extra-links">
+            <a href="register.html" class="btn btn-secondary">Not registered yet?</a>
+            <a href="../index.html" class="btn btn-secondary">Back to Home</a>
+        </div>
     </section>
 
-    <!-- ======================  JavaScript  ====================== -->
+    <!-- =========================  JavaScript  ========================= -->
     <script>
-        // ==== Обычный логин (email + password) ====
+        // ---------- обычный логин ----------
         document.getElementById('loginForm').addEventListener('submit', function (e) {
-            e.preventDefault();                         // отменяем стандартную отправку
+            e.preventDefault();
 
             const email    = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
-            // Сохраняем введённые данные в localStorage
+            // сохраняем в localStorage
             localStorage.setItem('physioCube_email', email);
             localStorage.setItem('physioCube_password', password);
 
-            // Перенаправляем в личный кабинет
+            // переходим в личный кабинет
             window.location.href = '../dash.html';
         });
 
-        // ==== Авторизация через Google ====
+        // ---------- Google ----------
         document.getElementById('googleBtn').addEventListener('click', function () {
-            // При желании можно пометить способ входа
             localStorage.setItem('physioCube_social', 'google');
             window.location.href = '../dash.html';
         });
 
-        // ==== Авторизация через Apple ====
+        // ---------- Apple ----------
         document.getElementById('appleBtn').addEventListener('click', function () {
             localStorage.setItem('physioCube_social', 'apple');
             window.location.href = '../dash.html';
