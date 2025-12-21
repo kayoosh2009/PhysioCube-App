@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Physio Cube – Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ===============  Общий стиль (те же цвета, что и на главной странице)  =============== -->
+    <style>
+        :root{
+            --accent:#0794ae;   /* фирменный синий */
+            --white:#ffffff;   /* фон */
+        }
+
+        /* Минимальный reset */
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            background:var(--white);
+            font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                         "Helvetica Neue", Arial, sans-serif;
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            color:#333;
+        }
+
+        .card{
+            width:100%;
+            max-width:380px;
+            background:var(--white);
+            border:1px solid #e0e0e0;
+            border-radius:8px;
+            padding:1.5rem;
+            box-shadow:0 4px 12px rgba(0,0,0,0.07);
+            text-align:center;
+        }
+
+        .project-logo{
+            max-width:120px;
+            width:100%;
+            height:auto;
+            margin:0 auto 1rem;
+        }
+
+        .card h2{
+            margin-bottom:0.75rem;
+            color:var(--accent);
+            font-size:1.8rem;
+        }
+
+        .input-group{
+            margin-bottom:1rem;
+            text-align:left;
+        }
+
+        .input-group label{
+            display:block;
+            margin-bottom:0.25rem;
+            font-size:0.9rem;
+            color:#555;
+        }
+
+        .input-group input{
+            width:100%;
+            padding:0.55rem 0.75rem;
+            font-size:1rem;
+            border:1px solid #ccc;
+            border-radius:4px;
+            transition:border-color .2s;
+        }
+
+        .input-group input:focus{
+            outline:none;
+            border-color:var(--accent);
+        }
+
+        .btn{
+            display:inline-block;
+            width:100%;
+            padding:0.75rem;
+            font-size:1rem;
+            font-weight:bold;
+            color:var(--white);
+            background:var(--accent);
+            border:none;
+            border-radius:4px;
+            cursor:pointer;
+            text-decoration:none;
+            transition:background .2s, opacity .2s;
+        }
+
+        .btn:hover{
+            background:#056e93;   /* темнее при наведении */
+        }
+
+        .divider{
+            margin:1.25rem 0;
+            display:flex;
+            align-items:center;
+            color:#777;
+            font-size:0.9rem;
+        }
+        .divider::before,
+        .divider::after{
+            content:"";
+            flex:1;
+            height:1px;
+            background:#ddd;
+            margin:0 0.5rem;
+        }
+
+        /* --------------------  Social buttons  -------------------- */
+        .social-btn{
+            background:var(--white);
+            color:var(--accent);
+            border:1px solid var(--accent);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:0.5rem;
+        }
+        .social-btn:hover{
+            background:#f0f8fb;
+        }
+
+        .social-icon{
+            width:20px;
+            height:auto;
+            flex-shrink:0;
+        }
+
+        .social-btn img.social-icon{
+            /* keep vertical alignment */
+        }
+
+        /* --------------------  Адаптивность  -------------------- */
+        @media (max-width:480px){
+            .card{
+                margin:0 1rem;
+                padding:1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section class="card">
+        <!-- Логотип проекта -->
+        <img src="../img/icon.png" alt="Physio Cube logo" class="project-logo">
+
+        <h2>Login</h2>
+
+        <!-- ---------- Форма email / password ---------- -->
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email"
+                       placeholder="you@example.com" required autocomplete="username">
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password"
+                       placeholder="••••••••" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn">Sign In</button>
+        </form>
+
+        <!-- ---------- Разделитель ---------- -->
+        <div class="divider">or</div>
+
+        <!-- ---------- Кнопки входа через Google и Apple ---------- -->
+        <button class="btn social-btn" id="googleBtn">
+            <img src="../img/google.png" alt="Google" class="social-icon">
+            Sign in with Google
+        </button>
+
+        <button class="btn social-btn" id="appleBtn" style="margin-top:0.5rem;">
+            <img src="../img/apple.png" alt="Apple" class="social-icon">
+            Sign in with Apple
+        </button>
+    </section>
+
+    <!-- ======================  JavaScript  ====================== -->
+    <script>
+        // ==== Обычный логин (email + password) ====
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();                         // отменяем стандартную отправку
+
+            const email    = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Сохраняем введённые данные в localStorage
+            localStorage.setItem('physioCube_email', email);
+            localStorage.setItem('physioCube_password', password);
+
+            // Перенаправляем в личный кабинет
+            window.location.href = '../dash.html';
+        });
+
+        // ==== Авторизация через Google ====
+        document.getElementById('googleBtn').addEventListener('click', function () {
+            // При желании можно пометить способ входа
+            localStorage.setItem('physioCube_social', 'google');
+            window.location.href = '../dash.html';
+        });
+
+        // ==== Авторизация через Apple ====
+        document.getElementById('appleBtn').addEventListener('click', function () {
+            localStorage.setItem('physioCube_social', 'apple');
+            window.location.href = '../dash.html';
+        });
+    </script>
+</body>
+</html>
