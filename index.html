@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Physio Cube – Welcome</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* ====================  Цвета  ==================== */
+        :root{
+            --accent:#0794ae;   /* основной фирменный цвет */
+            --white:#ffffff;   /* фон */
+        }
+
+        /* ====================  Сброс и базовые стили  ==================== */
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+        body{
+            background:var(--white);
+            color:var(--accent);
+            font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                         "Helvetica Neue", Arial, sans-serif;
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;   /* центрируем блок «логотип+текст» по вертикали */
+            align-items:center;
+        }
+
+        /* ====================  Главный блок (логотип + надпись)  ==================== */
+        .hero{
+            text-align:center;
+        }
+        .hero img{
+            max-width:200px;      /* размер логотипа, меняйте по желанию */
+            width:100%;
+            height:auto;
+        }
+        .hero h1{
+            margin-top:1rem;
+            font-size:2rem;
+            color:var(--accent);
+        }
+
+        /* ====================  Кнопки внизу страницы  ==================== */
+        .actions{
+            position:fixed;
+            bottom:1.5rem;        /* небольшое отступление от нижнего края */
+            width:100%;
+            display:flex;
+            justify-content:center;
+            gap:1rem;
+        }
+        .actions a{
+            background:var(--accent);
+            color:var(--white);
+            text-decoration:none;
+            padding:.75rem 1.5rem;
+            border-radius:4px;
+            font-size:1rem;
+            transition:opacity .2s;
+        }
+        .actions a:hover{
+            opacity:.8;          /* простой эффект – без новых цветов */
+        }
+
+        /* ====================  Адаптивность  ==================== */
+        @media (max-width:480px){
+            .hero h1{
+                font-size:1.5rem;
+            }
+            .actions{
+                flex-direction:column;
+                gap:.5rem;
+            }
+            .actions a{
+                width:80%;
+                text-align:center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Центрированная часть: логотип + надпись -->
+    <section class="hero">
+        <img src="img/logo.png" alt="Physio Cube logo">
+        <h1>Let's get started</h1>
+    </section>
+
+    <!-- Кнопки «Register» и «Login» внизу экрана -->
+    <nav class="actions">
+        <a href="user/register.html">Register</a>
+        <a href="user/login.html">Login</a>
+    </nav>
+
+</body>
+</html>
