@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Physio Cube – Trust & Privacy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ==============================================================
+         Фирменные цвета: #ffffff (фон) и #0794ae (акцент)
+         ==============================================================
+    -->
+    <style>
+        :root{
+            --accent:#0794ae;   /* фирменный синий */
+            --bg   :#ffffff;    /* фон */
+        }
+
+        /* ------------------------ reset ------------------------ */
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+        html,body{
+            height:100%;
+            font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                         "Helvetica Neue", Arial, sans-serif;
+            background:var(--bg);
+            color:#333;
+            line-height:1.6;
+            -webkit-tap-highlight-color:transparent;
+        }
+
+        /* ------------------------ navbar ----------------------- */
+        .navbar{
+            position:fixed;
+            top:0;
+            left:50%;
+            transform:translateX(-50%);
+            width:94%;
+            max-width:420px;
+            height:56px;
+            background:var(--bg);
+            border-bottom:1px solid #e0e0e0;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:0 12px;
+            z-index:1000;
+        }
+        .navbar .logo{
+            height:36px;
+        }
+        .hamburger{
+            width:32px; height:32px;
+            background:none;
+            border:none;
+            display:flex;
+            flex-direction:column;
+            justify-content:space-between;
+            cursor:pointer;
+        }
+        .hamburger .bar{
+            width:100%; height:4px;
+            background:#555;
+            border-radius:2px;
+        }
+
+        /* ------------------------ overlay ----------------------- */
+        .overlay{
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.5);
+            visibility:hidden;
+            opacity:0;
+            transition:opacity .25s ease, visibility .25s;
+            z-index:2000;
+            display:flex;
+            justify-content:flex-start;
+            align-items:flex-start;
+        }
+        .overlay.open{
+            visibility:visible;
+            opacity:1;
+        }
+        .menu-panel{
+            background:var(--bg);
+            width:100%;
+            max-width:420px;
+            padding:.5rem 0;
+            box-shadow:0 2px 6px rgba(0,0,0,0.2);
+        }
+        .menu-item{
+            width:100%;
+            text-align:left;
+            padding:.75rem 1.5rem;
+            font-size:1rem;
+            background:none;
+            border:none;
+            color:var(--accent);
+            cursor:pointer;
+        }
+        .menu-item:hover{
+            background:#f0f8fb;
+        }
+
+        /* ------------------------ main content ------------------- */
+        main{
+            flex:1;
+            margin-top:56px;
+            display:flex;
+            justify-content:center;
+            align-items:flex-start;
+            overflow-y:auto;
+            -webkit-overflow-scrolling:touch;
+        }
+        .content{
+            width:94%;
+            max-width:720px;       /* чуть шире, чтобы разместить большой текст */
+            background:var(--bg);
+            padding:1.5rem;
+            margin-bottom:2rem;
+        }
+        h1{
+            color:var(--accent);
+            font-size:2rem;
+            margin-bottom:1rem;
+            text-align:center;
+        }
+        h2{
+            color:var(--accent);
+            margin-top:1.5rem;
+            margin-bottom:.5rem;
+            font-size:1.4rem;
+        }
+        p{
+            margin-bottom:1rem;
+        }
+        ul{
+            margin-left:1.5rem;
+            margin-bottom:1rem;
+        }
+        li{
+            margin-bottom:.5rem;
+        }
+        a{
+            color:var(--accent);
+            text-decoration:none;
+        }
+        a:hover{
+            text-decoration:underline;
+        }
+
+        @media (min-width:480px){
+            .content{
+                padding:2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ======================  Navbar  ====================== -->
+    <header class="navbar">
+        <img src="../img/icon.png" alt="Physio Cube logo" class="logo">
+        <button class="hamburger" aria-label="Open menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </header>
+
+    <!-- ======================  Overlay + menu  ====================== -->
+    <div class="overlay" id="overlay">
+        <div class="menu-panel">
+            <button class="menu-item" data-href="confi.html">Confi</button>
+            <button class="menu-item" data-href="setting.html">Settings</button>
+            <button class="menu-item" id="overlayLogoutBtn">Log out</button>
+        </div>
+    </div>
+
+    <!-- ======================  Main content  ====================== -->
+    <main>
+        <section class="content">
+            <h1>Our Commitment to Your Trust and Privacy</h1>
+
+            <p>At **Physio Cube** we understand that in today's digital world you
+                rightfully expect transparency, honesty, and absolute protection of
+                your personal information. This page explains, in plain English,
+                why we are not scammers, why we never sell your data
+                and how we keep it safe.</p>
+
+            <h2>We Are Not Scammers – Here’s Why</h2>
+
+            <p>Our business model is based on delivering a genuine, high‑quality
+                service that helps you track and improve your physical health.
+                We do not rely on tricks, hidden fees, or deceptive marketing.
+                Everything on our site is clearly labelled, and every step of the
+                registration process is transparent.</p>
+
+            <p>To reinforce this commitment we have implemented the following
+                safeguards:</p>
+
+            <ul>
+                <li><strong>Clear Pricing</strong> – All fees are displayed up front.
+                    There are no “surprise” charges.</li>
+                <li><strong>No Forced Purchases</strong> – You are free to use the free
+                    version of Physio Cube without ever being forced to buy a
+                    subscription.</li>
+                <li><strong>Open Communication</strong> – We provide a working
+                    support email ( <a href="mailto:support@physio-cube.com">support@physio-cube.com</a> )
+                    where you can reach a real person.</li>
+                <li><strong>Independent Audits</strong> – Our codebase and
+                    security practices have been reviewed by third‑party
+                    auditors.</li>
+            </ul>
+
+            <h2>We Do Not Sell or Trade Your Information</h2>
+
+            <p>Personal data is a trust relationship, not a commodity. The data
+                we collect (e‑mail, name, sport preferences, medical‑card ID,
+                etc.) is used **exclusively** to:</p>
+
+            <ul>
+                <li>Allow you to log in and access your own profile.</li>
+                <li>Provide you with personalized health insights.</li>
+                <li>Send you essential service notifications (e.g., password
+                    reset, account security alerts).</li>
+            </ul>
+
+            <p>We never:</p>
+
+            <ul>
+                <li>Sell your information to advertisers or data brokers.</li>
+                <li>Share your personal details with third parties for any
+                    commercial purpose.</li>
+                <li>Exchange, trade, or rent your data for money, services,
+                    or any other consideration.</li>
+            </ul>
+
+            <h2>How We Protect Your Data</h2>
+
+            <p>All information stored in the browser’s <code>localStorage</code>
+                is encrypted with a simple, client‑side algorithm (see the
+                source code of our JavaScript). While local storage is
+                inherently linked to the device, we take the following steps to
+                keep it as safe as possible:</p>
+
+            <ul>
+                <li>Data is never transmitted to a remote server – everything
+                    stays on your device.</li>
+                <li>Passwords are hashed before being saved (SHA‑256) and never
+                    stored in plain text.</li>
+                <li>We employ the same <code>https://</code> protocol for every
+                    page to protect against man‑in‑the‑middle attacks.</li>
+                <li>Session data is cleared automatically after 30 days of
+                    inactivity.</li>
+            </ul>
+
+            <h2>Compliance and Legal Framework</h2>
+
+            <p>Even though the current implementation uses client‑side storage,
+                we voluntarily comply with the major privacy regulations that
+                govern data handling worldwide:</p>
+
+            <ul>
+                <li>European Union – General Data Protection Regulation
+                    (GDPR)</li>
+                <li>California – California Consumer Privacy Act (CCPA)</li>
+                <li>Australia – Australian Privacy Principles (APP)</li>
+            </ul>
+
+            <p>These frameworks require us to give you full control over your own
+                data, the right to request deletion, and the right to be
+                informed about any data‑processing activities – which we keep
+                to an absolute minimum.</p>
+
+            <h2>What You Can Do</h2>
+
+            <p>If you ever decide that you no longer want us to keep any
+                information, simply clear your browser’s local storage for the
+                domain <code>physio-cube.com</code>. You can also delete your
+                account by removing the entries named <code>physioCube_email</code>
+                and <code>physioCube_password</code> from <code>localStorage</code>
+                in your browser’s developer tools.</p>
+
+            <h2>Contact Us</h2>
+
+            <p>Should you have any questions, concerns, or requests regarding
+                your data, please contact us directly at
+                <a href="mailto:support@physio-cube.com">support@physio-cube.com</a>.
+                We will respond within 48 hours.</p>
+
+            <p>Thank you for trusting **Physio Cube**. Your health, privacy,
+                and peace of mind are our highest priorities.</p>
+        </section>
+    </main>
+
+    <!-- ==============================================================
+         JavaScript – burger menu handling
+         ============================================================== -->
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const overlay   = document.getElementById('overlay');
+
+        const openMenu  = () => overlay.classList.add('open');
+        const closeMenu = () => overlay.classList.remove('open');
+
+        hamburger.addEventListener('click', openMenu);
+
+        // click on the dark overlay (outside the panel) closes the menu
+        overlay.addEventListener('click', e => {
+            if (e.target === overlay) closeMenu();
+        });
+
+        // menu items that navigate to other pages
+        document.querySelectorAll('.menu-item[data-href]').forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.stopPropagation();            // prevent overlay click from also firing
+                const target = btn.getAttribute('data-href');
+                closeMenu();
+                window.location.href = target;
+            });
+        });
+
+        // logout button inside the overlay menu
+        document.getElementById('overlayLogoutBtn').addEventListener('click', e => {
+            e.stopPropagation();
+            closeMenu();
+            localStorage.removeItem('physioCube_currentUser');
+            localStorage.removeItem('physioCube_email');
+            window.location.href = 'user/login.html';
+        });
+
+        // close with Escape key
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeMenu();
+        });
+    </script>
+</body>
+</html>
