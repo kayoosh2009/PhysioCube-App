@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Physio Cube – Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ==============================================================
+         Mobile‑first стили + фирменные цвета #ffffff и #0794ae
+         ============================================================== -->
+    <style>
+        :root{
+            --accent:#0794ae;   /* основной фирменный синий */
+            --bg   :#ffffff;    /* фон */
+        }
+
+        /* ---------- reset ---------- */
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+        html,body{
+            height:100%;
+            font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                         "Helvetica Neue", Arial, sans-serif;
+            background:var(--bg);
+            color:#333;
+            -webkit-tap-highlight-color:transparent;
+        }
+
+        /* ---------- Navbar (центр, та же ширина, что у карточки) ---------- */
+        .navbar{
+            position:fixed;
+            top:0;
+            left:50%;
+            transform:translateX(-50%);
+            width:94%;
+            max-width:420px;               /* совпадает с карточкой */
+            height:56px;
+            background:var(--bg);
+            border-bottom:1px solid #e0e0e0;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:0 12px;
+            z-index:1000;
+        }
+        .navbar .logo{
+            height:36px;                     /* логотип */
+        }
+        .hamburger{
+            width:32px; height:32px;
+            background:none; border:none;
+            display:flex; flex-direction:column;
+            justify-content:space-between;
+            cursor:pointer;
+        }
+        .hamburger .bar{
+            width:100%; height:4px;
+            background:#555;
+            border-radius:2px;
+        }
+
+        /* ---------- Затемнённый overlay + меню‑панель ---------- */
+        .overlay{
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.5);
+            display:flex;
+            justify-content:flex-start;   /* меню у верхнего края */
+            align-items:flex-start;
+            visibility:hidden;
+            opacity:0;
+            transition:opacity .25s ease, visibility .25s;
+            z-index:2000;                  /* выше navbar и контента */
+        }
+        .overlay.open{
+            visibility:visible;
+            opacity:1;
+        }
+        .menu-panel{
+            background:var(--bg);
+            width:100%;
+            padding:.5rem 0;
+            box-shadow:0 2px 6px rgba(0,0,0,0.2);
+        }
+        .menu-item{
+            width:100%;
+            text-align:left;
+            padding:.75rem 1.5rem;
+            font-size:1rem;
+            background:none;
+            border:none;
+            color:var(--accent);
+            cursor:pointer;
+        }
+        .menu-item:hover{
+            background:#f0f8fb;
+        }
+
+        /* ---------- Main content ---------- */
+        main{
+            flex:1;
+            margin-top:56px;               /* под navbar */
+            display:flex;
+            justify-content:center;
+            align-items:flex-start;
+            overflow-y:auto;
+            -webkit-overflow-scrolling:touch;
+        }
+        .card{
+            width:94%;
+            max-width:420px;
+            background:var(--bg);
+            border:1px solid #e0e0e0;
+            border-radius:8px;
+            padding:1.5rem;
+            box-shadow:0 4px 12px rgba(0,0,0,0.07);
+            text-align:center;
+        }
+        .project-logo{
+            max-width:120px;
+            width:100%;
+            height:auto;
+            margin:0 auto 1rem;
+        }
+        h2{
+            margin-bottom:0.5rem;
+            font-size:1.9rem;
+            color:var(--accent);
+        }
+        .small-info{
+            font-size:0.85rem;
+            color:#555;
+            margin-bottom:1.5rem;
+        }
+
+        /* ---------- Таблица статусов ---------- */
+        .status-table{
+            width:100%;
+            border-collapse:collapse;
+            margin-bottom:1.5rem;
+        }
+        .status-table th,
+        .status-table td{
+            border:1px solid #ddd;
+            padding:0.6rem;
+            text-align:left;
+            font-size:0.95rem;
+        }
+        .status-table th{
+            background:#f5faff;
+            color:var(--accent);
+        }
+
+        /* ---------- Кнопка «Send new test» ---------- */
+        .btn{
+            display:inline-block;
+            width:100%;
+            min-height:48px;
+            padding:.75rem;
+            font-size:1rem;
+            font-weight:bold;
+            color:var(--bg);
+            background:var(--accent);
+            border:none;
+            border-radius:4px;
+            cursor:pointer;
+            text-decoration:none;
+            transition:background .2s;
+            margin-top:.5rem;
+        }
+        .btn:hover{
+            background:#056e93;
+        }
+
+        @media (min-width:480px){
+            .card{
+                padding:1.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =====================  Navbar  ===================== -->
+    <header class="navbar">
+        <img src="img/icon.png" alt="Physio Cube logo" class="logo">
+        <button class="hamburger" aria-label="Open menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </header>
+
+    <!-- =====================  Overlay + меню  ===================== -->
+    <div class="overlay" id="overlay">
+        <div class="menu-panel">
+            <button class="menu-item" data-href="confi.html">Confidentiality</button>
+            <button class="menu-item" data-href="setting.html">Settings</button>
+            <button class="menu-item" id="overlayLogoutBtn">Log out</button>
+        </div>
+    </div>
+
+    <!-- =====================  Main content  ===================== -->
+    <main>
+        <section class="card">
+
+            <!-- Логотип (чтобы выглядел одинаково) -->
+            <img src="img/icon.png" alt="Physio Cube logo" class="project-logo">
+
+            <!-- Приветствие -->
+            <h2 id="welcome">Welcome</h2>
+            <p class="small-info" id="userInfo"></p>
+
+            <!-- Таблица статуса тестов -->
+            <table class="status-table">
+                <thead>
+                    <tr>
+                        <th>Test</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="testsBody"><!-- заполняется скриптом --></tbody>
+            </table>
+
+            <!-- Кнопка отправки нового теста -->
+            <button class="btn" id="newTestBtn">Send new test</button>
+
+        </section>
+    </main>
+
+    <!-- ==============================================================
+         JavaScript – работа с localStorage, вывод данных и меню
+         ============================================================== -->
+    <script>
+        /* --------------------------------------------------------------
+           1. Проверка авторизации
+           -------------------------------------------------------------- */
+        const email = localStorage.getItem('physioCube_currentUser') ||
+                      localStorage.getItem('physioCube_email');
+
+        if (!email) {
+            window.location.href = 'user/login.html';
+        }
+
+        const users = JSON.parse(localStorage.getItem('physioCube_users') || '[]');
+        const currentUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+
+        if (!currentUser) {
+            window.location.href = 'user/login.html';
+        }
+
+        /* --------------------------------------------------------------
+           2. Приветствие и информация о пользователе
+           -------------------------------------------------------------- */
+        document.getElementById('welcome').textContent = `Welcome ${currentUser.firstName}`;
+        document.getElementById('userInfo').textContent =
+            `ID: ${currentUser.id} | Hospital: ${currentUser.hospital}`;
+
+        /* --------------------------------------------------------------
+           3. Таблица тестов
+           -------------------------------------------------------------- */
+        const tests = JSON.parse(localStorage.getItem('physioCube_tests') || '[]');
+        const userTests = tests.filter(t =>
+            t.email && t.email.toLowerCase() === email.toLowerCase()
+        );
+
+        const tbody = document.getElementById('testsBody');
+
+        if (userTests.length === 0) {
+            const tr = document.createElement('tr');
+            const td = document.createElement('td');
+            td.colSpan = 2;
+            td.style.textAlign = 'center';
+            td.style.color = '#777';
+            td.textContent = 'No tests yet. Click “Send new test” to create one.';
+            tr.appendChild(td);
+            tbody.appendChild(tr);
+        } else {
+            userTests.forEach(test => {
+                const tr = document.createElement('tr');
+
+                const tdTitle = document.createElement('td');
+                tdTitle.textContent = test.title || 'Untitled test';
+                tr.appendChild(tdTitle);
+
+                const tdStatus = document.createElement('td');
+                tdStatus.textContent = test.status || 'Submitted';
+                tr.appendChild(tdStatus);
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        /* --------------------------------------------------------------
+           4. Кнопка «Send new test»
+           -------------------------------------------------------------- */
+        document.getElementById('newTestBtn').addEventListener('click', () => {
+            window.location.href = 'test/q1.html';
+        });
+
+        /* --------------------------------------------------------------
+           5. Функция выхода (Log out)
+           -------------------------------------------------------------- */
+        function logout() {
+            localStorage.removeItem('physioCube_currentUser');
+            localStorage.removeItem('physioCube_email');
+            window.location.href = 'user/login.html';
+        }
+
+        /* --------------------------------------------------------------
+           6. Меню‑гамбургер (открытие / закрытие)
+           -------------------------------------------------------------- */
+        const hamburger = document.querySelector('.hamburger');
+        const overlay   = document.getElementById('overlay');
+
+        const openMenu  = () => overlay.classList.add('open');
+        const closeMenu = () => overlay.classList.remove('open');
+
+        hamburger.addEventListener('click', openMenu);
+
+        // Клик по затемнённому фону закрывает меню
+        overlay.addEventListener('click', e => {
+            if (e.target === overlay) closeMenu();
+        });
+
+        // Пункт «Confi» и «Settings» – переход к нужной странице
+        document.querySelectorAll('.menu-item[data-href]').forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.stopPropagation();          // не закрывать overlay дважды
+                const target = btn.getAttribute('data-href');
+                closeMenu();
+                window.location.href = target;
+            });
+        });
+
+        // Пункт «Log out» внутри меню
+        document.getElementById('overlayLogoutBtn')
+                .addEventListener('click', e => {
+                    e.stopPropagation();
+                    closeMenu();
+                    logout();
+                });
+
+        // Закрыть меню по клавише Esc
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeMenu();
+        });
+    </script>
+</body>
+</html>
