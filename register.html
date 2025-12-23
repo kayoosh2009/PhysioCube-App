@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Physio Cube – Register</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        /* ==================== Цвета и сброс ==================== */
+        :root{
+            --accent:#0794ae;   /* фирменный синий */
+            --white:#ffffff;    /* фон карточки */
+            --bg-body:#f4f6f8;  /* фон страницы на ПК */
+            --text:#333333;
+            --text-light:#666666;
+            --border:#e0e0e0;
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            background:var(--bg-body);
+            font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            color:var(--text);
+        }
+
+        /* ==================== Карточка (Телефонный стиль) ==================== */
+        .card{
+            width:100%;
+            max-width:380px;      /* Ширина телефона */
+            background:var(--white);
+            border:1px solid var(--border);
+            border-radius:12px;
+            padding:2rem 1.5rem;
+            box-shadow:0 10px 25px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Логотип */
+        .project-logo{
+            max-width:100px;
+            width:100%;
+            height:auto;
+            margin:0 auto 1rem;
+            display: block;
+        }
+
+        h2{
+            margin-bottom:1.5rem;
+            color:var(--accent);
+            font-size:1.8rem;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        /* ==================== Поля ввода ==================== */
+        .input-group{
+            margin-bottom:1rem;
+            text-align:left;
+        }
+
+        .input-group label{
+            display:block;
+            margin-bottom:0.3rem;
+            font-size:0.9rem;
+            color:var(--text-light);
+            font-weight: 500;
+        }
+
+        .input-group input,
+        .input-group select{
+            width:100%;
+            padding:0.7rem;
+            font-size:1rem;
+            border:1px solid #ccc;
+            border-radius:8px; /* Скругление полей */
+            transition:border-color .2s, box-shadow .2s;
+            background: #fafafa;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus{
+            outline:none;
+            border-color:var(--accent);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(7, 148, 174, 0.1);
+        }
+
+        /* ==================== Кнопки ==================== */
+        .btn{
+            display:block;
+            width:100%;
+            padding:0.9rem;
+            font-size:1.1rem;
+            font-weight:bold;
+            border-radius:8px;
+            cursor:pointer;
+            text-decoration:none;
+            transition:all .2s;
+            text-align: center;
+            border: none;
+            margin-top: 1rem;
+        }
+
+        .btn-primary{
+            color:var(--white);
+            background:var(--accent);
+            box-shadow: 0 4px 6px rgba(7, 148, 174, 0.2);
+        }
+        .btn-primary:hover{
+            background:#056e93;
+            transform: translateY(-1px);
+        }
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .extra-links{
+            margin-top:1.5rem;
+            display:flex;
+            flex-direction:column;
+            gap:0.8rem;
+        }
+
+        .btn-secondary{
+            background:transparent;
+            color:var(--accent);
+            border:1px solid var(--accent);
+            font-size: 0.95rem;
+            padding: 0.7rem;
+        }
+        .btn-secondary:hover{
+            background:#f0f8fb;
+        }
+
+        /* ==================== Адаптивность (Mobile First ощущение) ==================== */
+        @media (max-width:480px){
+            body {
+                background: var(--white);
+            }
+            .card{
+                border:none;
+                box-shadow:none;
+                border-radius: 0;
+                padding: 1.5rem 1rem;
+                max-width: 100%;
+                min-height: 100vh;
+                justify-content: center; /* Центрируем контент по вертикали если он помещается */
+            }
+            /* Если контента много, позволяем скроллить */
+            .card {
+                justify-content: flex-start; 
+                padding-top: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="card">
+        <img src="../img/icon.png" alt="Physio Cube logo" class="project-logo">
+
+        <h2>Create Account</h2>
+
+        <form id="registerForm">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required autocomplete="email" placeholder="you@example.com">
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required autocomplete="new-password" placeholder="••••••••">
+            </div>
+
+            <div class="input-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" required autocomplete="given-name" placeholder="John">
+            </div>
+
+            <div class="input-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" required autocomplete="family-name" placeholder="Doe">
+            </div>
+
+            <div class="input-group">
+                <label for="userId">Personal ID</label>
+                <input type="number" id="userId" required placeholder="e.g. 12345678">
+            </div>
+
+            <div class="input-group">
+                <label for="gender">Gender</label>
+                <select id="gender" required>
+                    <option value="">Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="sport">Sport</label>
+                <input type="text" id="sport" placeholder="e.g. Swimming">
+            </div>
+
+            <div class="input-group">
+                <label for="medicalCard">Medical Card</label>
+                <input type="text" id="medicalCard" placeholder="Card number">
+            </div>
+
+            <div class="input-group">
+                <label for="hospital">Hospital</label>
+                <select id="hospital" required>
+                    <option value="">Select hospital</option>
+                    <option value="Clalit">Clalit</option>
+                    <option value="Macabi">Macabi</option>
+                    <option value="Meuhedet">Meuhedet</option>
+                    <option value="Leumit">Leumit</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="submitBtn">Register</button>
+        </form>
+
+        <div class="extra-links">
+            <a href="login.html" class="btn btn-secondary">Already have an account? Log in</a>
+            <a href="../index.html" style="text-align: center; color: #999; font-size: 0.9rem; text-decoration: none; margin-top: 5px;">Back to Home</a>
+        </div>
+    </section>
+
+    <script type="module">
+        // Импортируем функции из SDK (v10)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Твоя конфигурация Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyB8DZm6yDyGHD9rWo-bIhsipsKeMXCTcBk",
+            authDomain: "physio-cube.firebaseapp.com",
+            projectId: "physio-cube",
+            storageBucket: "physio-cube.firebasestorage.app",
+            messagingSenderId: "593288932552",
+            appId: "1:593288932552:web:3b4783b6c16fef9eae09fd",
+            measurementId: "G-F5W17MVEZD"
+        };
+
+        // Инициализация
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Обработчик формы
+        const registerForm = document.getElementById('registerForm');
+        const submitBtn = document.getElementById('submitBtn');
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Блокируем кнопку, чтобы не нажали дважды
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating account...';
+
+            // Собираем данные
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            // Данные для Firestore (пароль туда НЕ пишем ради безопасности)
+            const userProfileData = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                personalId: document.getElementById('userId').value.trim(),
+                gender: document.getElementById('gender').value,
+                sport: document.getElementById('sport').value.trim(),
+                medicalCard: document.getElementById('medicalCard').value.trim(),
+                hospital: document.getElementById('hospital').value,
+                email: email,
+                createdAt: new Date().toISOString() // дата регистрации
+            };
+
+            try {
+                // 1. Создаем пользователя в Authentication
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // 2. Создаем документ в Firestore с ID пользователя (UID)
+                // Это связывает логин и данные профиля
+                await setDoc(doc(db, "users", user.uid), userProfileData);
+
+                // Успех!
+                alert("Account created successfully!");
+                window.location.href = "login.html";
+
+            } catch (error) {
+                console.error("Error adding user: ", error);
+                
+                // Обработка ошибок для пользователя
+                let msg = "An error occurred. Please try again.";
+                if (error.code === 'auth/email-already-in-use') {
+                    msg = "This email is already registered.";
+                } else if (error.code === 'auth/weak-password') {
+                    msg = "Password should be at least 6 characters.";
+                }
+                
+                alert(msg);
+                
+                // Разблокируем кнопку
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Register';
+            }
+        });
+    </script>
+
+</body>
+</html>
