@@ -255,8 +255,8 @@
 
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                // Успех -> на главную
-                window.location.href = "../index.html";
+                // Успех -> Перенаправление на Dashboard
+                window.location.href = "../dash.html";
             } catch (error) {
                 console.error(error);
                 alert("Incorrect email or password.");
@@ -273,8 +273,8 @@
             try {
                 // Открывает всплывающее окно Google
                 await signInWithPopup(auth, provider);
-                // Если ок -> на главную
-                window.location.href = "../index.html";
+                // Успех -> Перенаправление на Dashboard
+                window.location.href = "../dash.html";
             } catch (error) {
                 console.error("Google login error:", error);
                 alert("Failed to login with Google: " + error.message);
@@ -286,7 +286,6 @@
         
         appleBtn.addEventListener('click', () => {
             // Переход в папку error, файл error01.html
-            // ../ означает "выйти из папки user"
             window.location.href = "../error/error01.html";
         });
 
