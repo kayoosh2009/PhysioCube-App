@@ -1,356 +1,393 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Physio Cube – Test – Step 1</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Physio Cube – Test Step 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-<style>
-    :root{
-        --accent:#0794ae;   /* фирменный синий */
-        --bg   :#ffffff;    /* фон */
-    }
+    <style>
+        :root{
+            --accent: #0794ae;
+            --bg-body: #f0f2f5;
+            --bg-app: #ffffff;
+            --text-main: #333;
+            --text-light: #666;
+            --border: #e0e0e0;
+        }
 
-    /* ---------- reset ----------
-       (достаточный минимум) */
-    *{margin:0;padding:0;box-sizing:border-box;}
-    html,body{
-        height:100%;
-        font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-                     "Helvetica Neue", Arial, sans-serif;
-        background:var(--bg);
-        color:#333;
-        line-height:1.6;
-        -webkit-tap-highlight-color:transparent;
-    }
+        * { margin:0; padding:0; box-sizing:border-box; }
 
-    /* ---------- Navbar (центр, ширина = карточке) ---------- */
-    .navbar{
-        position:fixed;
-        top:0; left:50%; transform:translateX(-50%);
-        width:94%; max-width:420px;
-        height:56px;
-        background:var(--bg);
-        border-bottom:1px solid #e0e0e0;
-        display:flex; align-items:center; justify-content:space-between;
-        padding:0 12px;
-        z-index:1000;
-    }
-    .navbar .logo{height:36px;}
-    .hamburger{
-        width:32px;height:32px;
-        background:none;border:none;
-        display:flex; flex-direction:column; justify-content:space-between;
-        cursor:pointer;
-    }
-    .hamburger .bar{
-        width:100%;height:4px;
-        background:#555;border-radius:2px;
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-body);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: var(--text-main);
+        }
 
-    /* ---------- Overlay + центр‑меню ----------
-       overlay покрывает весь экран, а .menu-panel позиционируется
-       по‑центру горизонтально и сразу под шапкой. */
-    .overlay{
-        position:fixed;
-        inset:0;
-        background:rgba(0,0,0,0.5);
-        visibility:hidden;
-        opacity:0;
-        transition:opacity .25s ease, visibility .25s;
-        z-index:2000;
-        display:flex;
-        justify-content:center;   /* центрируем меню */
-        align-items:flex-start;    /* держим вверху */
-    }
-    .overlay.open{
-        visibility:visible;
-        opacity:1;
-    }
-    .menu-panel{
-        background:var(--bg);
-        width:94%; max-width:420px;
-        margin-top:56px;            /* начинается под Navbar */
-        border-radius:0 0 8px 8px;
-        padding:.5rem 0;
-        box-shadow:0 2px 6px rgba(0,0,0,0.2);
-    }
-    .menu-item{
-        width:100%;
-        text-align:left;
-        padding:.75rem 1.5rem;
-        font-size:1rem;
-        background:none;
-        border:none;
-        color:var(--accent);
-        cursor:pointer;
-    }
-    .menu-item:hover{background:#f0f8fb;}
+        /* --- Mobile Wrapper --- */
+        .mobile-viewport {
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            max-height: 900px;
+            background: var(--bg-app);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
 
-    /* ---------- Main content ---------- */
-    main{
-        flex:1;
-        margin-top:56px;            /* отступ под navbar */
-        display:flex; justify-content:center; align-items:flex-start;
-        overflow-y:auto;
-        -webkit-overflow-scrolling:touch;
-    }
-    .card{
-        width:94%; max-width:420px;
-        background:var(--bg);
-        border:1px solid #e0e0e0;
-        border-radius:8px;
-        padding:1.5rem;
-        box-shadow:0 4px 12px rgba(0,0,0,0.07);
-        text-align:left;
-    }
-    .card h2{
-        font-size:1.7rem;
-        color:var(--accent);
-        text-align:center;
-        margin-bottom:1rem;
-    }
-    .question{margin-bottom:1.25rem;}
-    .question label{
-        display:block;
-        font-weight:600;
-        margin-bottom:.4rem;
-        color:#222;
-    }
-    .question textarea{
-        width:100%;
-        min-height:80px;
-        padding:.55rem;
-        font-size:1rem;
-        border:1px solid #ccc;
-        border-radius:4px;
-        resize:vertical;
-    }
-    .question textarea:focus{
-        outline:none;
-        border-color:var(--accent);
-    }
-    .btn{
-        display:block;
-        width:100%;
-        min-height:48px;
-        padding:.75rem;
-        font-size:1rem;
-        font-weight:bold;
-        color:var(--bg);
-        background:var(--accent);
-        border:none;
-        border-radius:4px;
-        cursor:pointer;
-        text-align:center;
-        transition:background .2s;
-        margin-top:1rem;
-    }
-    .btn:hover{background:#056e93;}
+        @media (max-width: 480px) {
+            body { background: var(--bg-app); }
+            .mobile-viewport { max-width: 100%; max-height: 100%; box-shadow: none; }
+        }
 
-    /* ---------- блокировка скролла тела, когда открыто меню ----------
-       (добавляем класс .menu-open в <body>) */
-    body.menu-open{overflow:hidden;}
+        /* --- Navbar --- */
+        .navbar {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 15px;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+            position: relative;
+            z-index: 10;
+        }
 
-    @media (min-width:480px){
-        .card{padding:1.75rem;}
-    }
-</style>
+        .back-btn {
+            position: absolute;
+            left: 15px;
+            background: none;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* --- Content --- */
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 100px; /* Место под кнопку */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* --- Form Styling --- */
+        .question-card {
+            background: #fff;
+            margin-bottom: 20px;
+        }
+
+        .question-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .question-label small {
+            display: block;
+            font-weight: 400;
+            color: var(--text-light);
+            margin-top: 3px;
+            font-size: 0.85rem;
+        }
+
+        .question-textarea {
+            width: 100%;
+            min-height: 90px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #fafafa;
+            resize: vertical;
+            transition: border 0.2s, background 0.2s;
+        }
+
+        .question-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(7, 148, 174, 0.1);
+        }
+
+        /* --- Footer Button --- */
+        .action-area {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(to top, #fff 85%, rgba(255,255,255,0));
+            display: flex;
+            justify-content: center;
+            z-index: 20;
+        }
+
+        .btn-next {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            color: white;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(7, 148, 174, 0.3);
+            transition: transform 0.2s, background 0.2s;
+            text-align: center;
+        }
+        
+        .btn-next:active {
+            transform: scale(0.98);
+        }
+        .btn-next:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Loader */
+        #loader {
+            position: absolute; inset: 0; background: white; z-index: 50;
+            display: flex; justify-content: center; align-items: center;
+            flex-direction: column; gap: 10px; color: var(--accent);
+        }
+        .spinner {
+            width: 30px; height: 30px; border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--accent); border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    </style>
 </head>
 
 <body>
 
-<!--------------------------  Navbar  --------------------------->
-<header class="navbar">
-    <img src="../img/icon.png" alt="Physio Cube logo" class="logo">
-    <button class="hamburger" aria-label="Open menu">
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
-    </button>
-</header>
+    <div class="mobile-viewport">
+        
+        <header class="navbar">
+            <button class="back-btn" onclick="window.location.href='../dash.html'">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <h1>Questionnaire (1/2)</h1>
+        </header>
 
-<!--------------------------  Overlay (menu)  ------------------->
-<div class="overlay" id="overlay" role="dialog" aria-modal="true">
-    <div class="menu-panel">
-        <button class="menu-item" data-href="confidentiality.html">Confidentiality</button>
-        <button class="menu-item" data-href="setting.html">Settings</button>
-        <button class="menu-item" id="overlayLogoutBtn">Log out</button>
+        <div id="loader">
+            <div class="spinner"></div>
+            <div>Loading...</div>
+        </div>
+
+        <main class="content-scroll" id="mainContent" style="display:none;">
+            
+            <form id="testForm">
+                
+                <div class="question-card">
+                    <label class="question-label" for="q1">
+                        1. When did the injury occur?
+                        <small>Date/time, was the pain immediate or delayed?</small>
+                    </label>
+                    <textarea class="question-textarea" id="q1" placeholder="Enter details..."></textarea>
+                </div>
+
+                <div class="question-card">
+                    <label class="question-label" for="q2">
+                        2. What is the mechanism of the injury?
+                        <small>Impact, fall, strain, over-use, etc.</small>
+                    </label>
+                    <textarea class="question-textarea" id="q2" placeholder="Describe how it happened..."></textarea>
+                </div>
+
+                <div class="question-card">
+                    <label class="question-label" for="q3">
+                        3. Where exactly do you feel pain?
+                        <small>Precise location, adjacent areas</small>
+                    </label>
+                    <textarea class="question-textarea" id="q3" placeholder="e.g. left knee, lower back..."></textarea>
+                </div>
+
+                <div class="question-card">
+                    <label class="question-label" for="q4">
+                        4. What is the nature of the pain?
+                        <small>Sharp, burning, dragging, pulsating (Scale 1-10)</small>
+                    </label>
+                    <textarea class="question-textarea" id="q4" placeholder="Describe quality and intensity..."></textarea>
+                </div>
+
+                <div class="question-card">
+                    <label class="question-label" for="q5">
+                        5. What aggravates or relieves the pain?
+                        <small>Movements, posture, rest, cold/heat</small>
+                    </label>
+                    <textarea class="question-textarea" id="q5" placeholder="e.g. walking worsens, ice helps..."></textarea>
+                </div>
+
+                <div class="question-card">
+                    <label class="question-label" for="q6">
+                        6. Is there any limitation in movement?
+                        <small>Range, swelling, numbness</small>
+                    </label>
+                    <textarea class="question-textarea" id="q6" placeholder="Describe restrictions..."></textarea>
+                </div>
+
+                <div class="question-card">
+                    <label class="question-label" for="q7">
+                        7. Which activities cannot you perform?
+                        <small>Lifting, walking, sitting, sport, etc.</small>
+                    </label>
+                    <textarea class="question-textarea" id="q7" placeholder="Activities you avoid..."></textarea>
+                </div>
+
+                <div class="question-card">
+                    <label class="question-label" for="q8">
+                        8. Have you received any treatment?
+                        <small>Massage, pills, surgery – outcomes?</small>
+                    </label>
+                    <textarea class="question-textarea" id="q8" placeholder="Treatments tried..."></textarea>
+                </div>
+
+                <div class="question-card">
+                    <label class="question-label" for="q9">
+                        9. Any chronic conditions or previous injuries?
+                        <small>In the same area</small>
+                    </label>
+                    <textarea class="question-textarea" id="q9" placeholder="Relevant history..."></textarea>
+                </div>
+
+                <div class="question-card">
+                    <label class="question-label" for="q10">
+                        10. Are you willing to perform movements for 3D scan?
+                        <small>Limits in flexibility or balance?</small>
+                    </label>
+                    <textarea class="question-textarea" id="q10" placeholder="Your answer..."></textarea>
+                </div>
+
+            </form>
+        </main>
+
+        <div class="action-area">
+            <button type="button" class="btn-next" id="nextBtn">Next Step</button>
+        </div>
+
     </div>
-</div>
 
-<!--------------------------  Main content  --------------------->
-<main>
-    <section class="card">
-        <h2>Step 1 – Questionnaire</h2>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        <form id="testForm">
+        const firebaseConfig = {
+            apiKey: "AIzaSyB8DZm6yDyGHD9rWo-bIhsipsKeMXCTcBk",
+            authDomain: "physio-cube.firebaseapp.com",
+            projectId: "physio-cube",
+            storageBucket: "physio-cube.firebasestorage.app",
+            messagingSenderId: "593288932552",
+            appId: "1:593288932552:web:3b4783b6c16fef9eae09fd",
+            measurementId: "G-F5W17MVEZD"
+        };
 
-            <!-- Question 1 -->
-            <div class="question">
-                <label for="q1">
-                    When did the injury occur? <small>(date/time, was the pain immediate or delayed?)</small>
-                </label>
-                <textarea id="q1" name="q1" placeholder="Enter date, time and any additional details..."></textarea>
-            </div>
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-            <!-- Question 2 -->
-            <div class="question">
-                <label for="q2">
-                    What is the mechanism of the injury? <small>(impact, fall, strain, over‑use, etc.)</small>
-                </label>
-                <textarea id="q2" name="q2" placeholder="Describe how it happened..."></textarea>
-            </div>
+        // UI Refs
+        const loader = document.getElementById('loader');
+        const mainContent = document.getElementById('mainContent');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        let currentUserUid = null;
 
-            <!-- Question 3 -->
-            <div class="question">
-                <label for="q3">
-                    Where exactly do you feel pain? <small>(precise location, adjacent areas)</small>
-                </label>
-                <textarea id="q3" name="q3" placeholder="e.g. left knee, lower back..."></textarea>
-            </div>
+        // 1. Проверка авторизации и загрузка черновика (если есть)
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUserUid = user.uid;
+                
+                try {
+                    // Пытаемся загрузить ранее введенные данные (из раздела "tests/intake_form")
+                    const docRef = doc(db, "users", currentUserUid, "tests", "intake_form");
+                    const docSnap = await getDoc(docRef);
 
-            <!-- Question 4 -->
-            <div class="question">
-                <label for="q4">
-                    What is the nature of the pain? <small>(sharp, burning, dragging, pulsating) and its intensity on a scale of 1‑10</small>
-                </label>
-                <textarea id="q4" name="q4" placeholder="Describe the quality and rate the pain…"></textarea>
-            </div>
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        // Заполняем поля
+                        for (let i = 1; i <= 10; i++) {
+                            const el = document.getElementById(`q${i}`);
+                            if (el && data[`q${i}`]) {
+                                el.value = data[`q${i}`];
+                            }
+                        }
+                    }
+                } catch (e) {
+                    console.log("No previous data or error", e);
+                } finally {
+                    loader.style.display = 'none';
+                    mainContent.style.display = 'block';
+                }
 
-            <!-- Question 5 -->
-            <div class="question">
-                <label for="q5">
-                    What aggravates or relieves the pain? <small>(certain movements, posture, rest, cold/heat)</small>
-                </label>
-                <textarea id="q5" name="q5" placeholder="e.g. walking worsens, ice helps…"></textarea>
-            </div>
+            } else {
+                // Если не залогинен, отправляем на логин
+                window.location.href = '../user/login.html';
+            }
+        });
 
-            <!-- Question 6 -->
-            <div class="question">
-                <label for="q6">
-                    Is there any limitation in movement? <small>(range, pain in certain positions, swelling, numbness)</small>
-                </label>
-                <textarea id="q6" name="q6" placeholder="Describe any restrictions…"></textarea>
-            </div>
+        // 2. Обработка кнопки "Next"
+        nextBtn.addEventListener('click', async () => {
+            if (!currentUserUid) return;
 
-            <!-- Question 7 -->
-            <div class="question">
-                <label for="q7">
-                    Which actions or activities cannot you perform? <small>(lifting, walking, sitting, sport, etc.)</small>
-                </label>
-                <textarea id="q7" name="q7" placeholder="List the activities you avoid…"></textarea>
-            </div>
+            // Блокируем кнопку
+            nextBtn.disabled = true;
+            nextBtn.textContent = "Saving...";
 
-            <!-- Question 8 -->
-            <div class="question">
-                <label for="q8">
-                    Have you received any treatment? <small>(massage, physiotherapy, medication, surgery) – outcomes and timelines</small>
-                </label>
-                <textarea id="q8" name="q8" placeholder="Mention any treatment you tried…"></textarea>
-            </div>
+            // Собираем ответы
+            const answers = {};
+            for (let i = 1; i <= 10; i++) {
+                const val = document.getElementById(`q${i}`).value.trim();
+                answers[`q${i}`] = val;
+            }
 
-            <!-- Question 9 -->
-            <div class="question">
-                <label for="q9">
-                    Do you have any chronic conditions or previous injuries in the same area?
-                </label>
-                <textarea id="q9" name="q9" placeholder="Explain any relevant history…"></textarea>
-            </div>
+            // Добавляем timestamp
+            answers.updatedAt = new Date().toISOString();
 
-            <!-- Question 10 -->
-            <div class="question">
-                <label for="q10">
-                    Are you willing to perform the series of movements/positions required for a 3‑D scan? <small>(any limits in flexibility, balance, pose‑holding time)</small>
-                </label>
-                <textarea id="q10" name="q10" placeholder="Your answer…"></textarea>
-            </div>
+            try {
+                // Сохраняем в Firestore в подколлекцию tests
+                // Используем setDoc с merge:true, чтобы не перезатирать лишнее
+                await setDoc(doc(db, "users", currentUserUid, "tests", "intake_form"), answers, { merge: true });
 
-            <button type="button" class="btn" id="nextBtn">Next →</button>
-        </form>
-    </section>
-</main>
+                // Переход на следующий шаг
+                window.location.href = "q2.html";
 
-<script>
-/* --------------------------------------------------------------
-   1.  Burger‑menu handling (centered, accessible, scroll lock)
-   -------------------------------------------------------------- */
-const hamburger = document.querySelector('.hamburger');
-const overlay   = document.getElementById('overlay');
-let firstMenuItem = null;          // ссылка на первую кнопку меню (для авто‑фокуса)
+            } catch (error) {
+                console.error("Error saving test:", error);
+                alert("Error saving data. Please check your connection.");
+                nextBtn.disabled = false;
+                nextBtn.textContent = "Next Step";
+            }
+        });
 
-function openMenu(){
-    overlay.classList.add('open');
-    document.body.classList.add('menu-open');  // блокируем скролл страницы
-    // авто‑фокус на первом пункте меню
-    firstMenuItem = overlay.querySelector('.menu-item');
-    if (firstMenuItem) firstMenuItem.focus();
-}
-function closeMenu(){
-    overlay.classList.remove('open');
-    document.body.classList.remove('menu-open');
-    hamburger.focus();           // возвращаем фокус к иконке
-}
-hamburger.addEventListener('click', openMenu);
-
-// клик по затемнённой области закрывает меню
-overlay.addEventListener('click', e => {
-    if (e.target === overlay) closeMenu();
-});
-
-// навигация пунктов меню
-document.querySelectorAll('.menu-item[data-href]').forEach(btn => {
-    btn.addEventListener('click', e => {
-        e.stopPropagation();                // не даём событию “click” дойти до overlay
-        const target = btn.getAttribute('data-href');
-        closeMenu();
-        // небольшая задержка, чтобы анимация закрытия успела отработать
-        setTimeout(() => { window.location.href = target; }, 150);
-    });
-});
-
-// logout‑кнопка внутри overlay
-document.getElementById('overlayLogoutBtn').addEventListener('click', e => {
-    e.stopPropagation();
-    closeMenu();
-    setTimeout(() => {
-        localStorage.removeItem('physioCube_currentUser');
-        localStorage.removeItem('physioCube_email');
-        window.location.href = '../user/login.html';
-    }, 150);
-});
-
-// Escape закрывает меню
-document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && overlay.classList.contains('open')) {
-        closeMenu();
-    }
-});
-
-/* --------------------------------------------------------------
-   2.  Сохранить ответы и перейти к следующему шагу (q2.html)
-   -------------------------------------------------------------- */
-const form    = document.getElementById('testForm');
-const nextBtn = document.getElementById('nextBtn');
-
-nextBtn.addEventListener('click', () => {
-    const answers = {
-        q1 : document.getElementById('q1').value.trim(),
-        q2 : document.getElementById('q2').value.trim(),
-        q3 : document.getElementById('q3').value.trim(),
-        q4 : document.getElementById('q4').value.trim(),
-        q5 : document.getElementById('q5').value.trim(),
-        q6 : document.getElementById('q6').value.trim(),
-        q7 : document.getElementById('q7').value.trim(),
-        q8 : document.getElementById('q8').value.trim(),
-        q9 : document.getElementById('q9').value.trim(),
-        q10: document.getElementById('q10').value.trim()
-    };
-    // сохраняем в localStorage (будет читаться в q2.html)
-    localStorage.setItem('physioCube_test_q1', JSON.stringify(answers));
-    // переходим к следующему шагу
-    window.location.href = 'q2.html';
-});
-</script>
+    </script>
 </body>
 </html>
