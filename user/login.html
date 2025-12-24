@@ -225,7 +225,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        // Добавили OAuthProvider в импорт
+        import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, OAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         // Конфигурация
         const firebaseConfig = {
@@ -255,7 +256,7 @@
 
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                // Успех -> Перенаправление на Dashboard
+                // Успех -> dash.html
                 window.location.href = "../dash.html";
             } catch (error) {
                 console.error(error);
@@ -271,9 +272,8 @@
         googleBtn.addEventListener('click', async () => {
             const provider = new GoogleAuthProvider();
             try {
-                // Открывает всплывающее окно Google
                 await signInWithPopup(auth, provider);
-                // Успех -> Перенаправление на Dashboard
+                // Успех -> dash.html
                 window.location.href = "../dash.html";
             } catch (error) {
                 console.error("Google login error:", error);
@@ -281,12 +281,26 @@
             }
         });
 
-        // 3. ЛОГИКА APPLE (Редирект на ошибку)
+        // 3. ЛОГИКА APPLE ВХОДА (ИСПРАВЛЕНО)
         const appleBtn = document.getElementById('appleBtn');
         
-        appleBtn.addEventListener('click', () => {
-            // Переход в папку error, файл error01.html
-            window.location.href = "../error/error01.html";
+        appleBtn.addEventListener('click', async () => {
+            // Для Apple используется общий OAuthProvider с ID 'apple.com'
+            const provider = new OAuthProvider('apple.com');
+            
+            // Запрашиваем email и имя (Apple отдает их только при ПЕРВОМ входе)
+            provider.addScope('email');
+            provider.addScope('name');
+
+            try {
+                // Открывает всплывающее окно Apple ID
+                await signInWithPopup(auth, provider);
+                // Успех -> dash.html
+                window.location.href = "../dash.html";
+            } catch (error) {
+                console.error("Apple login error:", error);
+                alert("Failed to login with Apple: " + error.message);
+            }
         });
 
     </script>
