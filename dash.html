@@ -2,353 +2,389 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Physio Cube – Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physio Cube – Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <!-- ==============================================================
-         Mobile‑first стили + фирменные цвета #ffffff и #0794ae
-         ============================================================== -->
     <style>
         :root{
-            --accent:#0794ae;   /* основной фирменный синий */
-            --bg   :#ffffff;    /* фон */
+            --accent: #0794ae;
+            --accent-dark: #056e93;
+            --bg-body: #f0f2f5; 
+            --bg-app: #ffffff;
+            --text-main: #333;
+            --text-light: #777;
+            --border: #e0e0e0;
+            --danger: #d32f2f; /* Цвет для Logout */
         }
 
-        /* ---------- reset ---------- */
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-        }
-        html,body{
-            height:100%;
-            font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-                         "Helvetica Neue", Arial, sans-serif;
-            background:var(--bg);
-            color:#333;
-            -webkit-tap-highlight-color:transparent;
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-body);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: var(--text-main);
         }
 
-        /* ---------- Navbar (центр, та же ширина, что у карточки) ---------- */
-        .navbar{
-            position:fixed;
-            top:0;
-            left:50%;
-            transform:translateX(-50%);
-            width:94%;
-            max-width:420px;               /* совпадает с карточкой */
-            height:56px;
-            background:var(--bg);
-            border-bottom:1px solid #e0e0e0;
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            padding:0 12px;
-            z-index:1000;
-        }
-        .navbar .logo{
-            height:36px;                     /* логотип */
-        }
-        .hamburger{
-            width:32px; height:32px;
-            background:none; border:none;
-            display:flex; flex-direction:column;
-            justify-content:space-between;
-            cursor:pointer;
-        }
-        .hamburger .bar{
-            width:100%; height:4px;
-            background:#555;
-            border-radius:2px;
+        /* --- Имитация экрана телефона --- */
+        .mobile-viewport {
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            max-height: 900px;
+            background: var(--bg-app);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
 
-        /* ---------- Затемнённый overlay + меню‑панель ---------- */
-        .overlay{
-            position:fixed;
-            inset:0;
-            background:rgba(0,0,0,0.5);
-            display:flex;
-            justify-content:flex-start;   /* меню у верхнего края */
-            align-items:flex-start;
-            visibility:hidden;
-            opacity:0;
-            transition:opacity .25s ease, visibility .25s;
-            z-index:2000;                  /* выше navbar и контента */
-        }
-        .overlay.open{
-            visibility:visible;
-            opacity:1;
-        }
-        .menu-panel{
-            background:var(--bg);
-            width:100%;
-            padding:.5rem 0;
-            box-shadow:0 2px 6px rgba(0,0,0,0.2);
-        }
-        .menu-item{
-            width:100%;
-            text-align:left;
-            padding:.75rem 1.5rem;
-            font-size:1rem;
-            background:none;
-            border:none;
-            color:var(--accent);
-            cursor:pointer;
-        }
-        .menu-item:hover{
-            background:#f0f8fb;
-        }
-
-        /* ---------- Main content ---------- */
-        main{
-            flex:1;
-            margin-top:56px;               /* под navbar */
-            display:flex;
-            justify-content:center;
-            align-items:flex-start;
-            overflow-y:auto;
-            -webkit-overflow-scrolling:touch;
-        }
-        .card{
-            width:94%;
-            max-width:420px;
-            background:var(--bg);
-            border:1px solid #e0e0e0;
-            border-radius:8px;
-            padding:1.5rem;
-            box-shadow:0 4px 12px rgba(0,0,0,0.07);
-            text-align:center;
-        }
-        .project-logo{
-            max-width:120px;
-            width:100%;
-            height:auto;
-            margin:0 auto 1rem;
-        }
-        h2{
-            margin-bottom:0.5rem;
-            font-size:1.9rem;
-            color:var(--accent);
-        }
-        .small-info{
-            font-size:0.85rem;
-            color:#555;
-            margin-bottom:1.5rem;
-        }
-
-        /* ---------- Таблица статусов ---------- */
-        .status-table{
-            width:100%;
-            border-collapse:collapse;
-            margin-bottom:1.5rem;
-        }
-        .status-table th,
-        .status-table td{
-            border:1px solid #ddd;
-            padding:0.6rem;
-            text-align:left;
-            font-size:0.95rem;
-        }
-        .status-table th{
-            background:#f5faff;
-            color:var(--accent);
-        }
-
-        /* ---------- Кнопка «Send new test» ---------- */
-        .btn{
-            display:inline-block;
-            width:100%;
-            min-height:48px;
-            padding:.75rem;
-            font-size:1rem;
-            font-weight:bold;
-            color:var(--bg);
-            background:var(--accent);
-            border:none;
-            border-radius:4px;
-            cursor:pointer;
-            text-decoration:none;
-            transition:background .2s;
-            margin-top:.5rem;
-        }
-        .btn:hover{
-            background:#056e93;
-        }
-
-        @media (min-width:480px){
-            .card{
-                padding:1.75rem;
+        @media (max-width: 480px) {
+            body { background: var(--bg-app); }
+            .mobile-viewport { 
+                max-width: 100%; 
+                max-height: 100%; 
+                box-shadow: none; 
             }
         }
+
+        /* --- Шапка (Navbar) --- */
+        .navbar {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .navbar .logo {
+            height: 32px;
+            width: auto;
+        }
+
+        .hamburger {
+            width: 28px;
+            height: 24px;
+            background: none;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 0;
+        }
+        .hamburger .bar {
+            width: 100%;
+            height: 3px;
+            background: #333;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        .hamburger.active .bar:nth-child(1) { transform: translateY(10.5px) rotate(45deg); }
+        .hamburger.active .bar:nth-child(2) { opacity: 0; }
+        .hamburger.active .bar:nth-child(3) { transform: translateY(-10.5px) rotate(-45deg); }
+
+
+        /* --- Выезжающее меню --- */
+        .menu-overlay {
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 60px);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(5px);
+            z-index: 20;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .menu-overlay.open {
+            transform: translateX(0);
+        }
+
+        .menu-item {
+            background: none;
+            border: none;
+            text-align: left;
+            padding: 16px 0;
+            font-size: 1.1rem;
+            color: var(--text-main);
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .menu-item:hover { color: var(--accent); }
+
+        /* Стрелочка для пунктов меню */
+        .menu-item::after {
+            content: '›';
+            font-size: 1.5rem;
+            color: #ccc;
+            font-weight: 300;
+        }
+        .menu-item.logout-item::after { content: ''; } /* Убираем стрелочку у выхода */
+
+        /* Стиль для кнопки выхода (всегда внизу) */
+        .logout-item {
+            margin-top: auto; /* Прижимает к низу */
+            border-bottom: none;
+            color: var(--danger);
+            border-top: 1px solid #f0f0f0;
+        }
+        .logout-item:hover { color: #b71c1c; }
+
+
+        /* --- Контент --- */
+        .content-scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .info-card {
+            background: #fff;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .info-card h2 {
+            font-size: 1.6rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .user-details {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            background: #f8f9fa;
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Таблица */
+        .table-container {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .status-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .status-table th, .status-table td {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #eee;
+        }
+        .status-table th {
+            background: #f5faff;
+            color: var(--accent);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+        .status-table tr:last-child td { border-bottom: none; }
+
+        /* Кнопка */
+        .btn-action {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(7, 148, 174, 0.2);
+            transition: transform 0.1s, background 0.2s;
+        }
+        .btn-action:active {
+            transform: scale(0.98);
+            background: var(--accent-dark);
+        }
+
+        #loader {
+            position: absolute; inset: 0; background: white; z-index: 50;
+            display: flex; justify-content: center; align-items: center;
+            font-weight: 500; color: var(--accent);
+        }
+
     </style>
 </head>
 
 <body>
 
-    <!-- =====================  Navbar  ===================== -->
-    <header class="navbar">
-        <img src="img/icon.png" alt="Physio Cube logo" class="logo">
-        <button class="hamburger" aria-label="Open menu">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </button>
-    </header>
+    <div class="mobile-viewport">
+        
+        <div id="loader">Checking access...</div>
 
-    <!-- =====================  Overlay + меню  ===================== -->
-    <div class="overlay" id="overlay">
-        <div class="menu-panel">
+        <header class="navbar">
+            <img src="img/icon.png" alt="Logo" class="logo">
+            <button class="hamburger" id="hamburgerBtn">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </header>
+
+        <div class="menu-overlay" id="menuOverlay">
+            <button class="menu-item" data-href="user/data.html">My Data</button>
+            <button class="menu-item" data-href="user/settings.html">Settings</button>
             <button class="menu-item" data-href="confi.html">Confidentiality</button>
-            <button class="menu-item" data-href="setting.html">Settings</button>
-            <button class="menu-item" id="overlayLogoutBtn">Log out</button>
+            <button class="menu-item" data-href="data.html">FAQ</button>
+            
+            <button class="menu-item logout-item" id="logoutBtn">Log Out</button>
         </div>
+
+        <main class="content-scroll-area" id="mainContent" style="display: none;">
+            
+            <div class="info-card">
+                <h2 id="welcome">Hello!</h2>
+                <div class="user-details" id="userInfo">Loading info...</div>
+            </div>
+
+            <div class="table-container">
+                <table class="status-table">
+                    <thead>
+                        <tr>
+                            <th>Test Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="testsBody"></tbody>
+                </table>
+            </div>
+
+            <button class="btn-action" id="newTestBtn">
+                + Send New Test
+            </button>
+
+            <div style="height: 40px;"></div>
+        </main>
+
     </div>
 
-    <!-- =====================  Main content  ===================== -->
-    <main>
-        <section class="card">
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-            <!-- Логотип (чтобы выглядел одинаково) -->
-            <img src="img/icon.png" alt="Physio Cube logo" class="project-logo">
+        const firebaseConfig = {
+            apiKey: "AIzaSyB8DZm6yDyGHD9rWo-bIhsipsKeMXCTcBk",
+            authDomain: "physio-cube.firebaseapp.com",
+            projectId: "physio-cube",
+            storageBucket: "physio-cube.firebasestorage.app",
+            messagingSenderId: "593288932552",
+            appId: "1:593288932552:web:3b4783b6c16fef9eae09fd",
+            measurementId: "G-F5W17MVEZD"
+        };
 
-            <!-- Приветствие -->
-            <h2 id="welcome">Welcome</h2>
-            <p class="small-info" id="userInfo"></p>
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
 
-            <!-- Таблица статуса тестов -->
-            <table class="status-table">
-                <thead>
-                    <tr>
-                        <th>Test</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="testsBody"><!-- заполняется скриптом --></tbody>
-            </table>
+        // --- 1. Авторизация и Имя ---
+        onAuthStateChanged(auth, (user) => {
+            const loader = document.getElementById('loader');
+            const mainContent = document.getElementById('mainContent');
 
-            <!-- Кнопка отправки нового теста -->
-            <button class="btn" id="newTestBtn">Send new test</button>
+            if (user) {
+                loader.style.display = 'none';
+                mainContent.style.display = 'block';
 
-        </section>
-    </main>
+                // --- ЛОГИКА ИМЕНИ ---
+                let displayName = "Doctor"; // Значение по умолчанию
 
-    <!-- ==============================================================
-         JavaScript – работа с localStorage, вывод данных и меню
-         ============================================================== -->
-    <script>
-        /* --------------------------------------------------------------
-           1. Проверка авторизации
-           -------------------------------------------------------------- */
-        const email = localStorage.getItem('physioCube_currentUser') ||
-                      localStorage.getItem('physioCube_email');
+                if (user.displayName) {
+                    // Если есть имя в профиле (Google/Apple)
+                    displayName = user.displayName;
+                } else if (user.email) {
+                    // Если имени нет, берем часть email до собаки и делаем первую букву заглавной
+                    // например: ivan@mail.com -> Ivan
+                    const emailPrefix = user.email.split('@')[0];
+                    displayName = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
+                }
 
-        if (!email) {
-            window.location.href = 'user/login.html';
+                document.getElementById('welcome').textContent = `Welcome, ${displayName}`;
+                document.getElementById('userInfo').textContent = user.email;
+
+                loadTests(user.email);
+            } else {
+                window.location.href = 'user/login.html';
+            }
+        });
+
+        // --- 2. Загрузка тестов (Локальная) ---
+        function loadTests(userEmail) {
+            const tests = JSON.parse(localStorage.getItem('physioCube_tests') || '[]');
+            const userTests = tests.filter(t => t.email && t.email.toLowerCase() === userEmail.toLowerCase());
+            const tbody = document.getElementById('testsBody');
+            tbody.innerHTML = '';
+
+            if (userTests.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" style="text-align:center; color:#999;">No active tests</td></tr>';
+            } else {
+                userTests.forEach(test => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${test.title || 'Untitled'}</td>
+                        <td style="color:var(--accent); font-weight:500;">${test.status || 'Sent'}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
         }
 
-        const users = JSON.parse(localStorage.getItem('physioCube_users') || '[]');
-        const currentUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        // --- 3. Меню ---
+        const hamburger = document.getElementById('hamburgerBtn');
+        const menu = document.getElementById('menuOverlay');
 
-        if (!currentUser) {
-            window.location.href = 'user/login.html';
-        }
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            menu.classList.toggle('open');
+        });
 
-        /* --------------------------------------------------------------
-           2. Приветствие и информация о пользователе
-           -------------------------------------------------------------- */
-        document.getElementById('welcome').textContent = `Welcome ${currentUser.firstName}`;
-        document.getElementById('userInfo').textContent =
-            `ID: ${currentUser.id} | Hospital: ${currentUser.hospital}`;
-
-        /* --------------------------------------------------------------
-           3. Таблица тестов
-           -------------------------------------------------------------- */
-        const tests = JSON.parse(localStorage.getItem('physioCube_tests') || '[]');
-        const userTests = tests.filter(t =>
-            t.email && t.email.toLowerCase() === email.toLowerCase()
-        );
-
-        const tbody = document.getElementById('testsBody');
-
-        if (userTests.length === 0) {
-            const tr = document.createElement('tr');
-            const td = document.createElement('td');
-            td.colSpan = 2;
-            td.style.textAlign = 'center';
-            td.style.color = '#777';
-            td.textContent = 'No tests yet. Click “Send new test” to create one.';
-            tr.appendChild(td);
-            tbody.appendChild(tr);
-        } else {
-            userTests.forEach(test => {
-                const tr = document.createElement('tr');
-
-                const tdTitle = document.createElement('td');
-                tdTitle.textContent = test.title || 'Untitled test';
-                tr.appendChild(tdTitle);
-
-                const tdStatus = document.createElement('td');
-                tdStatus.textContent = test.status || 'Submitted';
-                tr.appendChild(tdStatus);
-
-                tbody.appendChild(tr);
+        // Переходы по ссылкам меню
+        document.querySelectorAll('.menu-item[data-href]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.getAttribute('data-href');
+                if (target) window.location.href = target;
             });
-        }
+        });
 
-        /* --------------------------------------------------------------
-           4. Кнопка «Send new test»
-           -------------------------------------------------------------- */
+        // Кнопка выхода
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            signOut(auth).catch((error) => console.error("Logout error", error));
+        });
+
+        // Кнопка нового теста
         document.getElementById('newTestBtn').addEventListener('click', () => {
             window.location.href = 'test/q1.html';
         });
 
-        /* --------------------------------------------------------------
-           5. Функция выхода (Log out)
-           -------------------------------------------------------------- */
-        function logout() {
-            localStorage.removeItem('physioCube_currentUser');
-            localStorage.removeItem('physioCube_email');
-            window.location.href = 'user/login.html';
-        }
-
-        /* --------------------------------------------------------------
-           6. Меню‑гамбургер (открытие / закрытие)
-           -------------------------------------------------------------- */
-        const hamburger = document.querySelector('.hamburger');
-        const overlay   = document.getElementById('overlay');
-
-        const openMenu  = () => overlay.classList.add('open');
-        const closeMenu = () => overlay.classList.remove('open');
-
-        hamburger.addEventListener('click', openMenu);
-
-        // Клик по затемнённому фону закрывает меню
-        overlay.addEventListener('click', e => {
-            if (e.target === overlay) closeMenu();
-        });
-
-        // Пункт «Confi» и «Settings» – переход к нужной странице
-        document.querySelectorAll('.menu-item[data-href]').forEach(btn => {
-            btn.addEventListener('click', e => {
-                e.stopPropagation();          // не закрывать overlay дважды
-                const target = btn.getAttribute('data-href');
-                closeMenu();
-                window.location.href = target;
-            });
-        });
-
-        // Пункт «Log out» внутри меню
-        document.getElementById('overlayLogoutBtn')
-                .addEventListener('click', e => {
-                    e.stopPropagation();
-                    closeMenu();
-                    logout();
-                });
-
-        // Закрыть меню по клавише Esc
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') closeMenu();
-        });
     </script>
 </body>
 </html>
