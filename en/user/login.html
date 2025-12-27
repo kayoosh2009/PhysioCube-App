@@ -45,6 +45,7 @@
             height:auto;
             margin:0 auto 1.5rem;
             display: block;
+            border-radius: 50%; /* Опционально: скругляет логотип */
         }
 
         h2{
@@ -82,6 +83,24 @@
             box-shadow: 0 0 0 3px rgba(7, 148, 174, 0.1);
         }
 
+        /* --- СТИЛЬ ДЛЯ ССЫЛКИ ЗАБЫЛ ПАРОЛЬ --- */
+        .forgot-pass-link {
+            text-align: right;
+            margin-top: -8px;
+            margin-bottom: 15px;
+        }
+        .forgot-pass-link a {
+            color: var(--accent);
+            font-size: 0.85rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .forgot-pass-link a:hover {
+            color: #056e93;
+            text-decoration: underline;
+        }
+
         /* Основная кнопка */
         .btn{
             display:block;
@@ -93,7 +112,6 @@
             cursor:pointer;
             border:none;
             transition:all .2s;
-            margin-top: 1.5rem;
         }
         .btn-primary{
             color:var(--white);
@@ -195,6 +213,10 @@
                 <input type="password" id="password" required autocomplete="current-password" placeholder="••••••••">
             </div>
 
+            <div class="forgot-pass-link">
+                <a href="#" id="forgotPasswordBtn">Forgot password?</a>
+            </div>
+
             <button type="submit" class="btn btn-primary" id="loginBtn">Log In</button>
         </form>
 
@@ -225,8 +247,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        // Добавили OAuthProvider в импорт
-        import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, OAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        // Добавили sendPasswordResetEmail в импорт
+        import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, OAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         // Конфигурация
         const firebaseConfig = {
@@ -266,6 +288,30 @@
             }
         });
 
+        // 4. ЛОГИКА ВОССТАНОВЛЕНИЯ ПАРОЛЯ (НОВОЕ)
+        const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+        
+        forgotPasswordBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+
+            if (!email) {
+                alert("Please enter your email address in the field above, then click 'Forgot password?' again.");
+                return;
+            }
+
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert("Password reset email sent! Check your inbox.");
+            } catch (error) {
+                console.error("Reset Password Error:", error);
+                let message = "Error sending reset email: " + error.message;
+                if (error.code === 'auth/user-not-found') message = "No user found with this email.";
+                alert(message);
+            }
+        });
+
+
         // 2. ЛОГИКА GOOGLE ВХОДА
         const googleBtn = document.getElementById('googleBtn');
         
@@ -281,19 +327,15 @@
             }
         });
 
-        // 3. ЛОГИКА APPLE ВХОДА (ИСПРАВЛЕНО)
+        // 3. ЛОГИКА APPLE ВХОДА
         const appleBtn = document.getElementById('appleBtn');
         
         appleBtn.addEventListener('click', async () => {
-            // Для Apple используется общий OAuthProvider с ID 'apple.com'
             const provider = new OAuthProvider('apple.com');
-            
-            // Запрашиваем email и имя (Apple отдает их только при ПЕРВОМ входе)
             provider.addScope('email');
             provider.addScope('name');
 
             try {
-                // Открывает всплывающее окно Apple ID
                 await signInWithPopup(auth, provider);
                 // Успех -> dash.html
                 window.location.href = "../dash.html";
