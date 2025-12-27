@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Physio Cube – Вход</title>
+    <link rel="icon" href="https://i.ibb.co/kgKXMwgq/round.png" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
@@ -320,3 +321,26 @@
                 console.error("Google login error:", error);
                 alert("Ошибка входа через Google: " + error.message);
             }
+        });
+
+        // 3. ЛОГИКА APPLE ВХОДА
+        const appleBtn = document.getElementById('appleBtn');
+        
+        appleBtn.addEventListener('click', async () => {
+            const provider = new OAuthProvider('apple.com');
+            provider.addScope('email');
+            provider.addScope('name');
+
+            try {
+                await signInWithPopup(auth, provider);
+                window.location.href = "../dash.html";
+            } catch (error) {
+                console.error("Apple login error:", error);
+                alert("Ошибка входа через Apple: " + error.message);
+            }
+        });
+
+    </script>
+
+</body>
+</html>
