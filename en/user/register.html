@@ -9,7 +9,10 @@
         *{ margin:0; padding:0; box-sizing:border-box; }
         body{ background:var(--bg-body); font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; min-height:100vh; display:flex; justify-content:center; align-items:center; color:var(--text); }
         .card{ width:100%; max-width:380px; background:var(--white); border:1px solid var(--border); border-radius:12px; padding:2rem 1.5rem; box-shadow:0 10px 25px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
-        .project-logo{ max-width:100px; margin:0 auto 1rem; display: block; }
+        
+        /* Логотип */
+        .project-logo{ max-width:100px; margin:0 auto 1rem; display: block; border-radius: 50%; /* Опционально: делает лого круглым, если нужно */ }
+        
         h2{ margin-bottom:1.5rem; color:var(--accent); font-size:1.8rem; text-align: center; font-weight: 700; }
         .input-group{ margin-bottom:1rem; text-align:left; }
         .input-group label{ display:block; margin-bottom:0.3rem; font-size:0.9rem; color:var(--text-light); font-weight: 500; }
@@ -28,7 +31,7 @@
 <body>
 
     <section class="card">
-        <img src="../img/icon.png" onerror="this.src='https://via.placeholder.com/100?text=Logo'" alt="Physio Cube logo" class="project-logo">
+        <img src="https://i.pinimg.com/736x/b1/21/13/b12113174c4e7e5af8f77a203e67663d.jpg" alt="Physio Cube logo" class="project-logo">
 
         <h2>Create Account</h2>
 
@@ -103,7 +106,6 @@
         import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Твоя конфигурация
         const firebaseConfig = {
             apiKey: "AIzaSyB8DZm6yDyGHD9rWo-bIhsipsKeMXCTcBk",
             authDomain: "physio-cube.firebaseapp.com",
@@ -129,7 +131,7 @@
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             
-            // Данные профиля (без пароля)
+            // Данные профиля (БЕЗ пароля - для безопасности)
             const profileData = {
                 firstName: document.getElementById('firstName').value.trim(),
                 lastName: document.getElementById('lastName').value.trim(),
@@ -138,7 +140,7 @@
                 sport: document.getElementById('sport').value.trim() || "None",
                 medicalCard: document.getElementById('medicalCard').value.trim() || "None",
                 hospital: document.getElementById('hospital').value,
-                email: email, // Дублируем email для удобства поиска в базе
+                email: email, 
                 createdAt: new Date().toISOString()
             };
 
@@ -147,8 +149,7 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                // 2. Создаем документ в Firestore с ID пользователя (UID)
-                // setDoc с конкретным ID лучше, чем addDoc
+                // 2. Создаем документ в Firestore с UID пользователя
                 await setDoc(doc(db, "users", user.uid), profileData);
 
                 alert("Registration successful! Redirecting to Login...");
