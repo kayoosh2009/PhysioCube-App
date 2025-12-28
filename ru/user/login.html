@@ -46,7 +46,7 @@
             height:auto;
             margin:0 auto 1.5rem;
             display: block;
-            border-radius: 50%;
+            border-radius: 50%; /* Опционально: скругляет логотип */
         }
 
         h2{
@@ -205,7 +205,7 @@
 
         <form id="loginForm">
             <div class="input-group">
-                <label for="email">Email</label>
+                <label for="email">Электронная почта</label>
                 <input type="email" id="email" required autocomplete="email" placeholder="you@example.com">
             </div>
 
@@ -242,14 +242,16 @@
 
         <div class="extra-links">
             <p>Нет аккаунта? <a href="register.html">Зарегистрироваться</a></p>
-            <p style="margin-top:0.5rem;"><a href="../main.html">На главную</a></p>
+            <p style="margin-top:0.5rem;"><a href="../main.html">Назад на главную</a></p>
         </div>
     </section>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        // Добавили sendPasswordResetEmail в импорт
         import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, OAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        // Конфигурация
         const firebaseConfig = {
             apiKey: "AIzaSyB8DZm6yDyGHD9rWo-bIhsipsKeMXCTcBk",
             authDomain: "physio-cube.firebaseapp.com",
@@ -265,45 +267,46 @@
 
         // 1. ЛОГИКА ОБЫЧНОГО ВХОДА (Email/Pass)
         const loginForm = document.getElementById('loginForm');
-        const loginBtn = document.getElementById('loginBtn');
+        const loginBtn  = document.getElementById('loginBtn');
 
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             loginBtn.disabled = true;
-            loginBtn.textContent = 'Вход...';
+            loginBtn.textContent = 'Выполняется вход...';
 
-            const email = document.getElementById('email').value.trim();
+            const email    = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
             try {
                 await signInWithEmailAndPassword(auth, email, password);
+                // Успех → dash.html
                 window.location.href = "../dash.html";
             } catch (error) {
                 console.error(error);
-                alert("Неверный email или пароль.");
+                alert("Неправильный адрес электронной почты или пароль.");
                 loginBtn.disabled = false;
                 loginBtn.textContent = 'Войти';
             }
         });
 
-        // 4. ЛОГИКА ВОССТАНОВЛЕНИЯ ПАРОЛЯ
+        // 4. ЛОГИКА ВОССТАНОВЛЕНИЯ ПАРОЛЯ (НОВОЕ)
         const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
-        
+
         forgotPasswordBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
 
             if (!email) {
-                alert("Пожалуйста, введите ваш email в поле выше и нажмите 'Забыли пароль?' снова.");
+                alert("Пожалуйста, введите ваш электронный адрес в поле выше, затем нажмите «Забыли пароль?» ещё раз.");
                 return;
             }
 
             try {
                 await sendPasswordResetEmail(auth, email);
-                alert("Письмо для сброса пароля отправлено! Проверьте почту.");
+                alert("Письмо для сброса пароля отправлено! Проверьте ваш почтовый ящик.");
             } catch (error) {
                 console.error("Reset Password Error:", error);
-                let message = "Ошибка отправки письма: " + error.message;
+                let message = "Ошибка отправки письма для сброса пароля: " + error.message;
                 if (error.code === 'auth/user-not-found') message = "Пользователь с таким email не найден.";
                 alert(message);
             }
@@ -311,21 +314,22 @@
 
         // 2. ЛОГИКА GOOGLE ВХОДА
         const googleBtn = document.getElementById('googleBtn');
-        
+
         googleBtn.addEventListener('click', async () => {
             const provider = new GoogleAuthProvider();
             try {
                 await signInWithPopup(auth, provider);
+                // Успех → dash.html
                 window.location.href = "../dash.html";
             } catch (error) {
                 console.error("Google login error:", error);
-                alert("Ошибка входа через Google: " + error.message);
+                alert("Не удалось войти через Google: " + error.message);
             }
         });
 
         // 3. ЛОГИКА APPLE ВХОДА
         const appleBtn = document.getElementById('appleBtn');
-        
+
         appleBtn.addEventListener('click', async () => {
             const provider = new OAuthProvider('apple.com');
             provider.addScope('email');
@@ -333,10 +337,11 @@
 
             try {
                 await signInWithPopup(auth, provider);
+                // Успех → dash.html
                 window.location.href = "../dash.html";
             } catch (error) {
                 console.error("Apple login error:", error);
-                alert("Ошибка входа через Apple: " + error.message);
+                alert("Не удалось войти через Apple: " + error.message);
             }
         });
 
